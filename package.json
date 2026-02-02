@@ -1,0 +1,39 @@
+{
+  "name": "jobrecruita",
+  "private": true,
+  "workspaces": [
+    "apps/mobile",
+    "apps/web",
+    "apps/backend",
+    "apps/shared"
+  ],
+  "scripts": {
+    "dev:web": "cd apps/web && next dev",
+    "dev:mobile": "cd apps/mobile && expo start",
+    "dev:backend": "cd apps/backend && nest start --watch",
+    "build:web": "cd apps/web && next build",
+    "build:mobile": "cd apps/mobile && expo build",
+    "build:backend": "cd apps/backend && nest build"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.12",
+    "@prisma/internals": "^7.3.0",
+    "autoprefixer": "^10.4.23",
+    "bcryptjs": "^3.0.3",
+    "expo-router": "~6.0.22",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "next": "^16.1.4",
+    "postcss": "^8.5.6",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-native-web": "^0.21.0",
+    "shadcn-ui": "^0.9.5",
+    "tailwindcss": "^4.1.18"
+  },
+  "devDependencies": {
+    "@types/node": "^25.0.10",
+    "@types/react": "^19.2.9",
+    "typescript": "^5.9.3"
+  }
+}

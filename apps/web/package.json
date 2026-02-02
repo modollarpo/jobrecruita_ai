@@ -1,0 +1,20 @@
+{
+  "name": "jobrecruita-web",
+  "version": "1.0.0",
+  "description": "Web frontend for JobRecruita (Next.js)",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "axios": "^1.13.2",
+    "chart.js": "^4.5.1",
+    "framer-motion": "^12.29.0",
+    "lucide-react": "^0.563.0",
+    "next": "^13.0.0",
+    "react": "^18.0.0",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^18.0.0"
+  }
+}

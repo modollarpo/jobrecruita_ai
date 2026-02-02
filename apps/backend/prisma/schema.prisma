@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id        String   @id @default(uuid())
+  name      String
+  users     User[]
+  jobs      Job[]
+  candidates CandidateProfile[]
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      UserRole
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  profile   CandidateProfile?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CandidateProfile {
+  id         String   @id @default(uuid())
+  userId     String   @unique
+  tenantId   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id])
+  cvUrl      String?
+  aiMatch    Json?
+  videoPitch String?
+  user       User     @relation(fields: [userId], references: [id])
+  matches    Match[]
+}
+
+model Job {
+  id          String   @id @default(uuid())
+  company     String
+  title       String
+  description String
+  requirements Json
+  postedBy    String
+  tenantId    String
+  tenant      Tenant   @relation(fields: [tenantId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  matches     Match[]
+}
+
+model Match {
+  id           String   @id @default(uuid())
+  candidateId  String
+  jobId        String
+  aiScore      Float
+  createdAt    DateTime @default(now())
+  candidate    CandidateProfile @relation(fields: [candidateId], references: [id])
+  job          Job             @relation(fields: [jobId], references: [id])
+}
+
+model Application {
+  id           String   @id @default(uuid())
+  candidateId  String
+  jobId        String
+  status       String
+  appliedAt    DateTime @default(now())
+}
+
+model Activity {
+  id        String   @id @default(uuid())
+  userId    String
+  action    String
+  meta      Json?
+  createdAt DateTime @default(now())
+}
+
+model Analytics {
+  id        String   @id @default(uuid())
+  kpi       String
+  value     Float
+  meta      Json?
+  createdAt DateTime @default(now())
+}
+
+enum UserRole {
+  candidate
+  recruiter
+  admin
+  super_admin
+}
