@@ -2,6 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  @apply bg-white text-black dark:bg-black dark:text-white;
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-brand-surface text-gray-heading;
+    font-feature-settings: "cv11";
+  }
+
+  ::selection {
+    @apply bg-blue-50;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    @apply outline-none ring-2 ring-brand-primary/30 ring-offset-2 ring-offset-white;
+  }
+
+  .dark a:focus-visible,
+  .dark button:focus-visible,
+  .dark input:focus-visible,
+  .dark select:focus-visible,
+  .dark textarea:focus-visible {
+    @apply ring-offset-slate-900;
+  }
 }

@@ -1,6 +1,7 @@
-import { View, Text, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react';
 import { JobSwipeCard } from '../components/JobSwipeCard';
+import { Screen } from '../components/Screen';
 
 // Example data for dashboard
 const jobs = [
@@ -28,45 +29,113 @@ export default function DashboardScreen() {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center bg-white dark:bg-black">
-        <ActivityIndicator size="large" color="#2563eb" />
-        <Text className="mt-4 text-gray-500">Loading dashboard...</Text>
-      </View>
+      <Screen>
+        <View style={styles.loadingCenter}>
+          <ActivityIndicator size="large" color="#0ea5e9" />
+          <Text style={styles.loadingText}>Loading your JobRecruita dashboard...</Text>
+        </View>
+      </Screen>
     );
   }
 
   return (
-    <ScrollView className="flex-1 bg-white dark:bg-black px-4 pt-8">
-      {/* AI Insights */}
-      <View className="mb-6 flex-row justify-between">
-        <View className="flex-1 bg-blue-100 dark:bg-blue-900 rounded-xl p-4 mr-2">
-          <Text className="text-xs text-blue-700 dark:text-blue-300">AI Matches</Text>
-          <Text className="text-2xl font-bold text-blue-700 dark:text-blue-300">{aiInsights.matches}</Text>
-        </View>
-        <View className="flex-1 bg-green-100 dark:bg-green-900 rounded-xl p-4 mx-1">
-          <Text className="text-xs text-green-700 dark:text-green-300">Auto-Applied</Text>
-          <Text className="text-2xl font-bold text-green-700 dark:text-green-300">{aiInsights.autoApplied}</Text>
-        </View>
-        <View className="flex-1 bg-yellow-100 dark:bg-yellow-900 rounded-xl p-4 ml-2">
-          <Text className="text-xs text-yellow-700 dark:text-yellow-300">Interviews</Text>
-          <Text className="text-2xl font-bold text-yellow-700 dark:text-yellow-300">{aiInsights.interviews}</Text>
-        </View>
-      </View>
+    <Screen>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Text style={styles.heading}>Today at a glance</Text>
 
-      {/* Recommended Jobs */}
-      <Text className="text-lg font-bold mb-2">Recommended Jobs</Text>
-      {jobs.map((job, idx) => (
-        <JobSwipeCard key={idx} job={job} />
-      ))}
-
-      {/* Activity Feed */}
-      <Text className="text-lg font-bold mt-8 mb-2">Activity Feed</Text>
-      {activity.map((a, idx) => (
-        <View key={idx} className="mb-4 p-3 rounded-lg bg-gray-100 dark:bg-gray-800">
-          <Text className="text-base text-gray-700 dark:text-gray-200">{a.message}</Text>
-          <Text className="text-xs text-gray-400 mt-1">{a.time}</Text>
+        <View style={styles.kpiRow}>
+          <View style={[styles.kpiCard, { backgroundColor: '#0f172a' }]}> 
+            <Text style={styles.kpiLabel}>AI matches</Text>
+            <Text style={styles.kpiValue}>{aiInsights.matches}</Text>
+          </View>
+          <View style={[styles.kpiCard, { backgroundColor: '#022c22' }]}> 
+            <Text style={styles.kpiLabel}>Auto-applied</Text>
+            <Text style={styles.kpiValue}>{aiInsights.autoApplied}</Text>
+          </View>
+          <View style={[styles.kpiCard, { backgroundColor: '#1f2937' }]}> 
+            <Text style={styles.kpiLabel}>Interviews</Text>
+            <Text style={styles.kpiValue}>{aiInsights.interviews}</Text>
+          </View>
         </View>
-      ))}
-    </ScrollView>
+
+        <Text style={styles.sectionTitle}>Recommended roles</Text>
+        {jobs.map((job, idx) => (
+          <JobSwipeCard key={idx} job={job} />
+        ))}
+
+        <Text style={styles.sectionTitle}>Recent activity</Text>
+        {activity.map((a, idx) => (
+          <View key={idx} style={styles.activityCard}>
+            <Text style={styles.activityText}>{a.message}</Text>
+            <Text style={styles.activityMeta}>{a.time}</Text>
+          </View>
+        ))}
+      </ScrollView>
+    </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingCenter: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loadingText: {
+    marginTop: 12,
+    color: '#9ca3af',
+  },
+  scrollContent: {
+    paddingBottom: 24,
+  },
+  heading: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#e5e7eb',
+    marginBottom: 16,
+  },
+  kpiRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+  },
+  kpiCard: {
+    flex: 1,
+    borderRadius: 16,
+    padding: 12,
+    marginHorizontal: 4,
+  },
+  kpiLabel: {
+    fontSize: 11,
+    color: '#9ca3af',
+    marginBottom: 4,
+  },
+  kpiValue: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#e5e7eb',
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#e5e7eb',
+    marginTop: 8,
+    marginBottom: 12,
+  },
+  activityCard: {
+    borderRadius: 16,
+    padding: 12,
+    backgroundColor: '#020617',
+    borderWidth: 1,
+    borderColor: '#111827',
+    marginBottom: 8,
+  },
+  activityText: {
+    color: '#d1d5db',
+  },
+  activityMeta: {
+    color: '#6b7280',
+    fontSize: 12,
+    marginTop: 4,
+  },
+});

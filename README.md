@@ -14,15 +14,49 @@
 	git clone https://github.com/modollarpo/jobrecruita_ai.git
 	cd jobrecruita_ai
 	```
-2. Install dependencies:
+2. Install dependencies (from the repo root):
 	```sh
 	npm install
 	```
 3. Copy `.env.example` files in each app to `.env` and fill in values.
-4. Start apps locally (in separate terminals):
-	- Web: `cd apps/web && npm run dev`
-	- Backend: `cd apps/backend && npm run start:dev`
-	- Mobile: `cd apps/mobile && npx expo start`
+4. Start apps locally (from the repo root, separate terminals recommended):
+	- Web: `npm run dev:web`
+	- Backend: `npm run dev:backend`
+	- Mobile: `npm run dev:mobile`
+
+## Top-level Commands
+
+From the repository root you can control all apps:
+
+- Development
+	- `npm run dev:web` – Next.js web frontend
+	- `npm run dev:backend` – NestJS API backend
+	- `npm run dev:mobile` – Expo mobile app
+
+- Build
+	- `npm run build:web` – Production build for web
+	- `npm run build:backend` – Production build for backend
+	- `npm run build` – Build web and backend together
+
+- Quality
+	- `npm run lint` – Lint web + backend
+	- `npm run typecheck` – Type-check web + backend
+
+## Local Full-stack Flow
+
+To exercise the full platform locally:
+
+1. In one terminal, start the backend API (NestJS + Prisma):
+	```sh
+	npm run dev:backend
+	```
+2. In another terminal, start the web frontend (Next.js):
+	```sh
+	npm run dev:web
+	```
+3. The web app will call its `/api/*` routes, which in turn talk to the backend on `http://localhost:3001` for auth and AI match endpoints as configured in the Next.js API handlers.
+
+Before running in earnest, ensure your Postgres instance is up and Prisma migrations have been applied from `apps/backend`.
 
 ## Azure Deployment
 

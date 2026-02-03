@@ -1,29 +1,37 @@
 // Super-admin Dashboard main component
-import { Card } from '../../shared/components/Card';
-import { Table } from '../../shared/components/Table';
-import { Button } from '../../shared/components/Button';
+import { Card } from './Card';
+import { Table } from './Table';
+import { Button } from './Button';
 
 export function SuperAdminDashboard() {
   return (
-    <div className="p-8 space-y-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Super-admin Dashboard</h1>
+    <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card title="Admins">5</Card>
         <Card title="Tenants">3</Card>
         <Card title="Pending Approvals">2</Card>
       </div>
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Admin Management</h2>
-        <Table columns={["Name", "Role", "Status"]} data={[]} />
-        <Button>Add Admin</Button>
+
+      <div className="rounded-2xl border border-gray-border bg-white shadow-premium p-6">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-lg font-semibold text-gray-heading">Admin Management</h2>
+          <Button type="button">Add Admin</Button>
+        </div>
+        <div className="mt-4">
+          <Table columns={["name", "role", "status"]} data={[]} />
+        </div>
       </div>
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 mt-8">
-        <h2 className="text-xl font-semibold mb-4">Logs</h2>
+
+      <div className="rounded-2xl border border-gray-border bg-white shadow-premium p-6">
+        <h2 className="text-lg font-semibold text-gray-heading mb-2">Logs</h2>
         {/* Logs table or viewer here */}
+        <p className="text-sm text-gray-body">Connect the audit log pipeline to view events.</p>
       </div>
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 mt-8">
-        <h2 className="text-xl font-semibold mb-4">Multi-tenant Controls</h2>
+
+      <div className="rounded-2xl border border-gray-border bg-white shadow-premium p-6">
+        <h2 className="text-lg font-semibold text-gray-heading mb-2">Multi-tenant Controls</h2>
         {/* Multi-tenant management UI here */}
+        <p className="text-sm text-gray-body">Tenant limits, approvals, and policy enforcement.</p>
       </div>
     </div>
   );

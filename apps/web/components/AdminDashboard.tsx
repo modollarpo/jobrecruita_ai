@@ -7,15 +7,15 @@ const Chart = dynamic(() => import('./Chart').then(mod => ({ default: mod.Chart 
 
 export function AdminDashboard() {
   return (
-    <div className="p-8 space-y-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+    <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card title="Users">128</Card>
         <Card title="Jobs">42</Card>
         <Card title="Active Workflows">7</Card>
       </div>
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">System Metrics</h2>
+
+      <div className="rounded-2xl border border-gray-border bg-white shadow-premium p-6">
+        <h2 className="text-lg font-semibold text-gray-heading mb-4">System Metrics</h2>
         <Chart type="line" data={{
           labels: ['Jan', 'Feb', 'Mar', 'Apr'],
           datasets: [
@@ -28,15 +28,25 @@ export function AdminDashboard() {
           ],
         }} />
       </div>
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 mt-8">
-        <h2 className="text-xl font-semibold mb-4">User Management</h2>
-        <Table columns={["Name", "Role", "Status"]} data={[]} />
-        <Button>Add User</Button>
+
+      <div className="rounded-2xl border border-gray-border bg-white shadow-premium p-6">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-lg font-semibold text-gray-heading">User Management</h2>
+          <Button type="button">Add User</Button>
+        </div>
+        <div className="mt-4">
+          <Table columns={["name", "role", "status"]} data={[]} />
+        </div>
       </div>
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 mt-8">
-        <h2 className="text-xl font-semibold mb-4">Job Management</h2>
-        <Table columns={["Title", "Company", "Status"]} data={[]} />
-        <Button>Add Job</Button>
+
+      <div className="rounded-2xl border border-gray-border bg-white shadow-premium p-6">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-lg font-semibold text-gray-heading">Job Management</h2>
+          <Button type="button">Add Job</Button>
+        </div>
+        <div className="mt-4">
+          <Table columns={["title", "company", "status"]} data={[]} />
+        </div>
       </div>
     </div>
   );

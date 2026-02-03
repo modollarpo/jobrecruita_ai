@@ -1,4 +1,4 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 
 interface JobSwipeCardProps {
   job: {
@@ -11,11 +11,47 @@ interface JobSwipeCardProps {
 
 export function JobSwipeCard({ job }: JobSwipeCardProps) {
   return (
-    <View className="bg-white dark:bg-gray-900 rounded-xl shadow-lg p-4 m-2">
-      {job.logoUrl && <Image source={{ uri: job.logoUrl }} className="w-12 h-12 mb-2" />}
-      <Text className="text-lg font-bold">{job.title}</Text>
-      <Text className="text-sm text-gray-500">{job.company}</Text>
-      <Text className="mt-2">{job.description}</Text>
+    <View style={styles.card}>
+      {job.logoUrl ? <Image source={{ uri: job.logoUrl }} style={styles.logo} /> : null}
+      <Text style={styles.title}>{job.title}</Text>
+      <Text style={styles.company}>{job.company}</Text>
+      <Text style={styles.description}>{job.description}</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: '#020617',
+    borderRadius: 20,
+    padding: 20,
+    marginVertical: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.18,
+    shadowRadius: 20,
+    shadowOffset: { width: 0, height: 10 },
+    borderWidth: 1,
+    borderColor: '#1e293b',
+  },
+  logo: {
+    width: 40,
+    height: 40,
+    marginBottom: 12,
+    borderRadius: 8,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#e5e7eb',
+  },
+  company: {
+    fontSize: 14,
+    color: '#9ca3af',
+    marginTop: 2,
+  },
+  description: {
+    fontSize: 14,
+    color: '#cbd5f5',
+    marginTop: 12,
+  },
+});

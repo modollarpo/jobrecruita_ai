@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
+import axios from 'axios';
 
-const prisma = new PrismaClient();
+const backendBase = process.env.BACKEND_URL || 'http://localhost:3001';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
-      const workflows = await prisma.analytics.findMany();
-      res.status(200).json(workflows);
-    } catch (error) {
-      res.status(500).json({ error: 'Failed to fetch workflows' });
+      const backendRes = await axios.get(`${backendBase}/workflows`);
+      res.status(200).json(backendRes.data);
+    } catch (error: any) {
+      res.status(error.response?.status || 500).json({ error: error.response?.data?.message || 'Failed to fetch workflows' });
     }
   } else {
     res.setHeader('Allow', ['GET']);

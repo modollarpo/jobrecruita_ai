@@ -4,14 +4,14 @@ const Chart = dynamic(() => import('./Chart').then(mod => ({ default: mod.Chart 
 
 export function AnalyticsDashboard() {
   return (
-    <div className="p-8 space-y-8 bg-white dark:bg-gray-900 min-h-screen">
-      <h1 className="text-3xl font-bold mb-6">Analytics Dashboard</h1>
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">KPIs</h2>
+    <div className="space-y-8">
+      <div className="rounded-2xl border border-gray-border bg-white shadow-premium p-6">
+        <h2 className="text-lg font-semibold text-gray-heading mb-4">KPIs</h2>
         {/* KPI cards here */}
       </div>
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 mt-8">
-        <h2 className="text-xl font-semibold mb-4">Candidate-Job Trends</h2>
+
+      <div className="rounded-2xl border border-gray-border bg-white shadow-premium p-6">
+        <h2 className="text-lg font-semibold text-gray-heading mb-4">Candidate-Job Trends</h2>
         <Chart type="line" data={{
           labels: ['Jan', 'Feb', 'Mar', 'Apr'],
           datasets: [

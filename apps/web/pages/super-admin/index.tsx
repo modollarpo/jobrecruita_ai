@@ -1,21 +1,19 @@
 // Super-admin Dashboard: admin management, logs, approvals, multi-tenant controls
-import Head from 'next/head';
 import { SuperAdminDashboard } from '../../components/SuperAdminDashboard';
+import { AppShell } from '../../components/AppShell';
+import { PageHeader } from '../../components/PageHeader';
 
 export default function SuperAdminDashboardPage() {
   return (
-    <>
-      <Head>
-        <title>Super-admin Dashboard – JobRecruita</title>
-        <meta name="description" content="Enterprise super-admin dashboard for multi-tenant management, logs, and approvals." />
-      </Head>
-      <div className="animate-fade-in">
-        <SuperAdminDashboard />
-      </div>
-      <style jsx global>{`
-        .animate-fade-in { animation: fadeIn 1s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-      `}</style>
-    </>
+    <AppShell
+      title="Super-admin – JobRecruita"
+      description="Enterprise super-admin dashboard for multi-tenant management, logs, and approvals."
+    >
+      <PageHeader
+        title="Super-admin"
+        subtitle="Multi-tenant controls, approvals, and audit oversight."
+      />
+      <SuperAdminDashboard />
+    </AppShell>
   );
 }

@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { apiFetch } from '../../../shared/utils/api';
+import Head from 'next/head';
+import Link from 'next/link';
+import { Logo } from '../../components/Logo';
+import { apiFetch } from '../../utils/api';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -25,14 +28,83 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-black">
-      <form className="bg-white dark:bg-gray-900 p-8 rounded shadow w-full max-w-md" onSubmit={handleRegister}>
-        <h1 className="text-2xl font-bold mb-6">Register</h1>
-        <input className="w-full mb-4 p-2 border rounded" type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required />
-        <input className="w-full mb-4 p-2 border rounded" type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} required />
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-        <button className="w-full bg-blue-600 text-white py-2 rounded font-semibold" type="submit">Register</button>
-      </form>
-    </main>
+    <>
+      <Head>
+        <title>Create account – JobRecruita</title>
+        <meta name="description" content="Create a JobRecruita account." />
+      </Head>
+
+      <div className="min-h-screen bg-brand-surface text-gray-heading">
+        <header className="border-b border-gray-border bg-white/80 backdrop-blur">
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+            <Link href="/" className="flex items-center">
+              <Logo />
+            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/auth/login"
+                className="text-sm font-medium text-gray-body hover:text-gray-heading rounded-lg px-3 py-2 hover:bg-blue-50 transition-colors"
+              >
+                Login
+              </Link>
+            </div>
+          </div>
+        </header>
+
+        <main className="mx-auto flex w-full max-w-7xl items-center justify-center px-6 py-16">
+          <form
+            className="w-full max-w-md rounded-2xl border border-gray-border bg-white shadow-premium p-8"
+            onSubmit={handleRegister}
+          >
+            <h1 className="text-2xl font-semibold tracking-tight">Create your account</h1>
+            <p className="mt-2 text-sm text-gray-body">Start matching candidates with confidence.</p>
+
+            <div className="mt-8 space-y-4">
+              <label className="block">
+                <span className="text-sm font-medium text-gray-body">Email</span>
+                <input
+                  className="mt-2 w-full rounded-lg border border-gray-border bg-white px-3 py-2 text-sm text-gray-heading placeholder:text-gray-body/60"
+                  type="email"
+                  placeholder="name@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                />
+              </label>
+
+              <label className="block">
+                <span className="text-sm font-medium text-gray-body">Password</span>
+                <input
+                  className="mt-2 w-full rounded-lg border border-gray-border bg-white px-3 py-2 text-sm text-gray-heading placeholder:text-gray-body/60"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  autoComplete="new-password"
+                />
+              </label>
+
+              {error ? <div className="text-sm text-red-600">{error}</div> : null}
+
+              <button
+                className="w-full rounded-lg bg-brand-primary px-4 py-2.5 text-sm font-semibold text-white shadow-premium transition hover:opacity-90"
+                type="submit"
+              >
+                Create account
+              </button>
+            </div>
+
+            <p className="mt-6 text-sm text-gray-body">
+              Already have an account?{' '}
+              <Link href="/auth/login" className="font-semibold text-gray-heading hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </form>
+        </main>
+      </div>
+    </>
   );
 }

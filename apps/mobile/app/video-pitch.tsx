@@ -1,17 +1,55 @@
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Screen } from '../components/Screen';
 
 export default function VideoPitchScreen() {
   // TODO: Integrate AI video pitch generation and upload
   return (
-    <View className="flex-1 items-center justify-center bg-white dark:bg-black px-6">
-      <Text className="text-2xl font-bold mb-4">AI Video Pitch</Text>
-      <Text className="text-gray-500 mb-8 text-center">Generate a 15–30 second AI-powered video pitch to stand out to recruiters.</Text>
-      <TouchableOpacity className="bg-purple-700 rounded-full px-8 py-3 mb-4">
-        <Text className="text-white text-lg font-semibold">Generate Video Pitch</Text>
-      </TouchableOpacity>
-      <TouchableOpacity className="bg-green-600 rounded-full px-8 py-3">
-        <Text className="text-white text-lg font-semibold">Upload Video</Text>
-      </TouchableOpacity>
-    </View>
+    <Screen>
+      <Text style={styles.heading}>AI video pitch</Text>
+      <Text style={styles.body}>
+        Generate a 15–30 second, on-brand video pitch to introduce yourself to hiring teams before the first call.
+      </Text>
+      <View style={styles.actions}>
+        <TouchableOpacity style={[styles.chip, styles.primaryChip]}>
+          <Text style={styles.chipLabel}>Generate with JobRecruita AI</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.chip, styles.secondaryChip]}>
+          <Text style={styles.chipLabel}>Upload existing video</Text>
+        </TouchableOpacity>
+      </View>
+    </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  heading: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#e5e7eb',
+    marginBottom: 12,
+  },
+  body: {
+    fontSize: 16,
+    color: '#9ca3af',
+    marginBottom: 32,
+  },
+  actions: {
+    gap: 12,
+  },
+  chip: {
+    borderRadius: 999,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  primaryChip: {
+    backgroundColor: '#7c3aed',
+  },
+  secondaryChip: {
+    backgroundColor: '#16a34a',
+  },
+  chipLabel: {
+    color: '#f9fafb',
+    fontWeight: '600',
+  },
+});

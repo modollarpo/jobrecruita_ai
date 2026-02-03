@@ -4,14 +4,16 @@
   "description": "Expo + TypeScript + Expo Router + NativeWind",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "expo start",
+    "build": "expo export",
+    "test": "echo \"No tests configured\" && exit 0"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "expo": "^54.0.32",
+    "expo": "^54.0.33",
     "expo-router": "~6.0.22",
     "react-native-web": "^0.21.0"
   }

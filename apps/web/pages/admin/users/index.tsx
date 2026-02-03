@@ -1,8 +1,8 @@
-import { AdminUserTable } from '../../../components/AdminUserTable';
-
-
 import { useEffect, useState } from 'react';
-import { apiFetch } from '../../../../shared/utils/api';
+import { AdminUserTable } from '../../../components/AdminUserTable';
+import { AppShell } from '../../../components/AppShell';
+import { PageHeader } from '../../../components/PageHeader';
+import { apiFetch } from '../../../utils/api';
 import { User } from '../../../../shared/types/user';
 
 export default function AdminUsersPage() {
@@ -18,15 +18,27 @@ export default function AdminUsersPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-white dark:bg-black p-8">
-      <h1 className="text-3xl font-bold mb-6">Admin: Users</h1>
-      {loading ? (
-        <div className="h-32 flex items-center justify-center text-gray-400">Loading...</div>
-      ) : error ? (
-        <div className="h-32 flex items-center justify-center text-red-500">{error}</div>
-      ) : (
-        <AdminUserTable users={users} />
-      )}
-    </main>
+    <AppShell title="Admin • Users – JobRecruita" description="Admin user directory and account management.">
+      <PageHeader
+        title="Admin • Users"
+        subtitle="Review accounts, roles, and account creation dates."
+      />
+
+      <section className="rounded-2xl border border-gray-border bg-white shadow-premium">
+        <div className="px-6 py-4 border-b border-gray-border">
+          <p className="text-sm text-gray-body">Showing {users.length} users</p>
+        </div>
+
+        <div className="p-6">
+          {loading ? (
+            <div className="h-32 flex items-center justify-center text-gray-400">Loading...</div>
+          ) : error ? (
+            <div className="h-32 flex items-center justify-center text-red-500">{error}</div>
+          ) : (
+            <AdminUserTable users={users} />
+          )}
+        </div>
+      </section>
+    </AppShell>
   );
 }

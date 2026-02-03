@@ -1,14 +1,13 @@
-import { View, Text, Animated, PanResponder, Dimensions, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { View, Text, Animated, PanResponder, Dimensions, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { JobSwipeCard } from '../components/JobSwipeCard';
 import { apiFetch } from '../../shared/utils/api';
 import { Job } from '../../shared/types/job';
-
-
+import { Screen } from '../components/Screen';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-// Job match overview with swipe actions and micro-interactions
+export default function SwipeScreen() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [index, setIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -26,7 +25,6 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
       .finally(() => setLoading(false));
   }, []);
 
-  // Fetch AI match score for the current job
   useEffect(() => {
     if (!jobs[index]) {
       setMatchScore(undefined);
@@ -59,7 +57,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
             useNativeDriver: false,
           }).start(() => {
             position.setValue({ x: 0, y: 0 });
-            setIndex((prev) => prev + 1);
+            setIndex(prev => prev + 1);
           });
         } else if (gesture.dx < -120) {
           Animated.timing(position, {
@@ -68,7 +66,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
             useNativeDriver: false,
           }).start(() => {
             position.setValue({ x: 0, y: 0 });
-            setIndex((prev) => prev + 1);
+            setIndex(prev => prev + 1);
           });
         } else {
           Animated.spring(position, {
@@ -80,33 +78,11 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
     })
   ).current;
 
-  if (loading) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
-        <Text style={{ fontSize: 20, color: '#6b7280' }}>Loading...</Text>
-      </View>
-    );
-  }
-  if (error) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
-        <Text style={{ fontSize: 20, color: 'red' }}>{error}</Text>
-      </View>
-    );
-  }
-  if (index >= jobs.length) {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
-        <Text style={{ fontSize: 20, color: '#6b7280' }}>No more jobs. Check back later!</Text>
-      </View>
-    );
-  }
-
   async function handleApply() {
+    if (!jobs[index]) return;
     setApplying(true);
     setApplyMsg(null);
     try {
-      // For demo, use a hardcoded candidateId or fetch from user context
       const candidateId = 'demo-candidate-id';
       await apiFetch('http://localhost:3000/api/apply', {
         method: 'POST',
@@ -121,34 +97,132 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
     }
   }
 
+  if (loading) {
+    return (
+      <Screen>
+        <View style={styles.center}>
+          <ActivityIndicator size="large" color="#0ea5e9" />
+          <Text style={styles.loadingText}>Loading roles...</Text>
+        </View>
+      </Screen>
+    );
+  }
+
+  if (error) {
+    return (
+      <Screen>
+        <View style={styles.center}>
+          <Text style={styles.errorText}>{error}</Text>
+        </View>
+      </Screen>
+    );
+  }
+
+  if (index >= jobs.length) {
+    return (
+      <Screen>
+        <View style={styles.center}>
+          <Text style={styles.emptyText}>No more jobs. Check back later.</Text>
+        </View>
+      </Screen>
+    );
+  }
+
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
-      <Animated.View
-        style={[{ width: '100%', transform: [{ translateX: position.x }, { translateY: position.y }] }]}
-        {...panResponder.panHandlers}
-      >
-        <JobSwipeCard job={jobs[index]} />
-      </Animated.View>
-      {/* AI Match Score Display */}
-      <View style={{ marginTop: 16, alignItems: 'center' }}>
+    <Screen>
+      <View style={styles.cardContainer}>
+        <Animated.View
+          style={[styles.animatedCard, { transform: [{ translateX: position.x }, { translateY: position.y }] }]}
+          {...panResponder.panHandlers}
+        >
+          <JobSwipeCard job={jobs[index]} />
+        </Animated.View>
+      </View>
+
+      <View style={styles.scoreContainer}>
         {scoreLoading ? (
-          <ActivityIndicator size="small" color="#2563eb" />
+          <ActivityIndicator size="small" color="#0ea5e9" />
         ) : matchScore === null ? (
-          <Text style={{ color: '#ef4444', fontWeight: 'bold' }}>AI Match: N/A</Text>
+          <Text style={styles.scoreError}>AI match: N/A</Text>
         ) : matchScore === undefined ? null : (
-          <Text style={{ color: '#2563eb', fontWeight: 'bold', fontSize: 18 }}>AI Match: {matchScore}</Text>
+          <Text style={styles.scoreLabel}>AI match: {matchScore}</Text>
         )}
       </View>
-      {applyMsg ? <Text style={{ color: 'green', marginTop: 12 }}>{applyMsg}</Text> : null}
+
+      {applyMsg ? <Text style={styles.applyMsg}>{applyMsg}</Text> : null}
+
       <TouchableOpacity
-        style={{ backgroundColor: '#2563eb', borderRadius: 24, paddingVertical: 12, paddingHorizontal: 32, marginTop: 16 }}
+        style={styles.applyButton}
         onPress={handleApply}
         disabled={applying}
-        activeOpacity={0.8}
+        activeOpacity={0.85}
       >
-        {applying ? <ActivityIndicator color="#fff" /> : <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Apply</Text>}
+        {applying ? <ActivityIndicator color="#f9fafb" /> : <Text style={styles.applyLabel}>Apply</Text>}
       </TouchableOpacity>
-      <Text style={{ marginTop: 32, color: '#9ca3af' }}>Swipe right to save, left to skip</Text>
-    </View>
+
+      <Text style={styles.hint}>Swipe right to save, left to skip.</Text>
+    </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loadingText: {
+    marginTop: 12,
+    color: '#9ca3af',
+  },
+  errorText: {
+    color: '#f97373',
+    fontSize: 16,
+  },
+  emptyText: {
+    color: '#9ca3af',
+    fontSize: 16,
+  },
+  cardContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  animatedCard: {
+    width: '100%',
+  },
+  scoreContainer: {
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  scoreLabel: {
+    color: '#0ea5e9',
+    fontWeight: '700',
+    fontSize: 18,
+  },
+  scoreError: {
+    color: '#f97373',
+    fontWeight: '600',
+  },
+  applyMsg: {
+    color: '#22c55e',
+    marginTop: 12,
+  },
+  applyButton: {
+    marginTop: 16,
+    borderRadius: 999,
+    backgroundColor: '#0ea5e9',
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    alignSelf: 'center',
+  },
+  applyLabel: {
+    color: '#f9fafb',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  hint: {
+    marginTop: 24,
+    color: '#6b7280',
+    textAlign: 'center',
+  },
+});

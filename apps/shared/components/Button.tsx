@@ -4,9 +4,12 @@ import React from 'react';
 export function Button({ children, onClick, ...props }: { children: React.ReactNode; onClick?: () => void; [key: string]: any }) {
   return (
     <button
-      className="px-4 py-2 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
       onClick={onClick}
       {...props}
+      className={
+        'inline-flex items-center justify-center rounded-lg bg-brand-primary px-4 py-2 text-sm font-semibold text-white shadow-premium transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 ' +
+        (props.className || '')
+      }
     >
       {children}
     </button>

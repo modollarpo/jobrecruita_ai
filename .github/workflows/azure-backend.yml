@@ -21,14 +21,18 @@ jobs:
       - name: Install dependencies
         run: |
           cd apps/backend
-          npm install
+          npm ci
       - name: Build NestJS app
         run: |
           cd apps/backend
           npm run build
+      - name: Package app
+        run: |
+          cd apps/backend
+          zip -r ../../backendapp.zip . -x "**/node_modules/**" "**/src/**" "**/.tsbuildinfo" "**/coverage/**"
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: ${{ secrets.AZURE_BACKEND_NAME }}
           publish-profile: ${{ secrets.AZURE_BACKEND_PUBLISH_PROFILE }}
-          package: ./apps/backend/dist
+          package: backendapp.zip

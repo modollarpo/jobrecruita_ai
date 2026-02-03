@@ -2,6 +2,7 @@ import React from "react";
 import { Radar } from "react-chartjs-2";
 import { motion } from "framer-motion";
 import { User, Video } from "lucide-react";
+import { VerificationSignal } from "../../../components/VerificationSignal";
 
 const radarData = {
   labels: ["Communication", "Tech", "Leadership", "Creativity", "Adaptability", "Teamwork"],
@@ -52,9 +53,12 @@ export default function CandidateMatchScreen() {
           transition={{ duration: 0.7, ease: "easeOut" }}
           className="bg-white border border-gray-border rounded-xl shadow-premium p-8 flex flex-col"
         >
-          <div className="flex items-center gap-3 mb-6">
-            <User className="w-6 h-6 text-brand-primary" />
-            <h2 className="text-2xl font-bold text-gray-heading">Skill Match</h2>
+          <div className="flex items-center justify-between gap-3 mb-6">
+            <div className="flex items-center gap-3">
+              <User className="w-6 h-6 text-brand-primary" />
+              <h2 className="text-2xl font-bold text-gray-heading">Skill Match</h2>
+            </div>
+            <VerificationSignal />
           </div>
           <Radar data={radarData} options={radarOptions} className="!max-w-[400px] mx-auto" />
           <div className="mt-8 text-center">

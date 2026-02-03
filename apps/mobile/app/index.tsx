@@ -1,13 +1,32 @@
-import { View, Text, Button } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
+import { Screen } from '../components/Screen';
+import { Button } from '../components/Button';
 
 export default function HomeScreen() {
   return (
-    <View className="flex-1 items-center justify-center bg-white dark:bg-black">
-      <Text className="text-2xl font-bold">Welcome to JobRecruita</Text>
-      <Link href="/onboarding">
-        <Button title="Get Started" />
+    <Screen>
+      <Text style={styles.title}>Welcome to JobRecruita</Text>
+      <Text style={styles.subtitle}>
+        Your AI co-pilot for finding roles that truly fit your skills, goals, and vibe.
+      </Text>
+      <Link href="/onboarding" asChild>
+        <Button title="Get Started" fullWidth />
       </Link>
-    </View>
+    </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#e5e7eb',
+    marginBottom: 12,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#9ca3af',
+    marginBottom: 32,
+  },
+});

@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
+import axios from 'axios';
 
-const prisma = new PrismaClient();
+const backendBase = process.env.BACKEND_URL || 'http://localhost:3001';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     try {
-      const users = await prisma.user.findMany();
-      res.status(200).json(users);
-    } catch (error) {
-      res.status(500).json({ error: 'Failed to fetch users' });
+      const backendRes = await axios.get(`${backendBase}/users`);
+      res.status(200).json(backendRes.data);
+    } catch (error: any) {
+      res.status(error.response?.status || 500).json({ error: error.response?.data?.message || 'Failed to fetch users' });
     }
   } else {
     res.setHeader('Allow', ['GET']);

@@ -1,9 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
-import Head from 'next/head';
+import { AppShell } from '../../components/AppShell';
+import { PageHeader } from '../../components/PageHeader';
 import { Table } from '../../components/Table';
 import { CandidateProfile } from '../../../shared/types/candidate';
-import { apiFetch } from '../../../shared/utils/api';
+import { apiFetch } from '../../utils/api';
 
 export default function CandidatesPage() {
   const [candidates, setCandidates] = useState<CandidateProfile[]>([]);
@@ -11,40 +12,54 @@ export default function CandidatesPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    apiFetch<CandidateProfile[]>('/api/candidates')
-      .then(setCandidates)
+    apiFetch<unknown>('/api/candidates')
+      .then((payload) => {
+        const arrayPayload = Array.isArray(payload)
+          ? payload
+          : Array.isArray((payload as any)?.candidates)
+          ? (payload as any).candidates
+          : [];
+        setCandidates(arrayPayload as CandidateProfile[]);
+      })
       .catch(() => setError('Failed to load candidates'))
       .finally(() => setLoading(false));
   }, []);
 
   return (
-    <>
-      <Head>
-        <title>Candidates – JobRecruita</title>
-        <meta name="description" content="Browse and manage candidates. Enterprise-grade candidate profiles and AI video pitches." />
-      </Head>
-      <main className="min-h-screen bg-white dark:bg-black p-8 animate-fade-in">
-        <h1 className="text-3xl font-bold mb-6">Candidates</h1>
-        {loading ? (
-          <div className="h-32 flex items-center justify-center text-gray-400 animate-pulse">Loading...</div>
-        ) : error ? (
-          <div className="h-32 flex items-center justify-center text-red-500 animate-fade-in">{error}</div>
-        ) : (
-          <Table
-            columns={["user.email", "user.role", "cvUrl", "videoPitch"]}
-            data={candidates.map(c => ({
-              'user.email': c.user.email,
-              'user.role': c.user.role,
-              cvUrl: c.cvUrl || '',
-              videoPitch: c.videoPitch || '',
-            }))}
-          />
-        )}
-      </main>
-      <style jsx global>{`
-        .animate-fade-in { animation: fadeIn 1s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-      `}</style>
-    </>
+    <AppShell
+      title="Candidates – JobRecruita"
+      description="Browse and manage candidates. Enterprise-grade profiles and AI insights."
+    >
+      <PageHeader
+        title="Candidates"
+        subtitle="Review candidate profiles, CVs, and AI-assisted signals in one place."
+      />
+
+      <section className="rounded-xl border border-gray-border bg-white shadow-premium">
+        <div className="border-b border-gray-border px-6 py-4">
+          <div className="text-sm font-semibold text-gray-heading">Directory</div>
+          <div className="mt-1 text-sm text-gray-body">{loading ? 'Loading candidates…' : `${candidates.length} candidates`}</div>
+        </div>
+        <div className="px-6 py-6">
+          {loading ? (
+            <div className="h-32 flex items-center justify-center text-gray-body">Loading…</div>
+          ) : error ? (
+            <div className="h-32 flex items-center justify-center text-red-600">{error}</div>
+          ) : Array.isArray(candidates) && candidates.length > 0 ? (
+            <Table
+              columns={["user.email", "user.role", "cvUrl", "videoPitch"]}
+              data={candidates.map((c) => ({
+                'user.email': c.user.email,
+                'user.role': c.user.role,
+                cvUrl: c.cvUrl || '—',
+                videoPitch: c.videoPitch || '—',
+              }))}
+            />
+          ) : (
+            <div className="h-32 flex items-center justify-center text-gray-body">No candidates yet.</div>
+          )}
+        </div>
+      </section>
+    </AppShell>
   );
 }

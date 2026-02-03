@@ -1,19 +1,28 @@
 // Candidate service with AI match stub
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../database/prisma.service';
 
 @Injectable()
 export class CandidateService {
+  constructor(private readonly prisma: PrismaService) {}
+
   findAll() {
-    // Fetch all candidates
-    return [];
+    return this.prisma.candidateProfile.findMany({
+      include: {
+        user: true,
+      },
+    });
   }
+
   findOne(id: string) {
-    // Fetch candidate by id
-    return { id };
+    return this.prisma.candidateProfile.findUnique({
+      where: { id },
+      include: { user: true },
+    });
   }
+
   create(data: any) {
-    // Create candidate
-    return data;
+    return this.prisma.candidateProfile.create({ data });
   }
   getAIMatchScore(candidateId: string, jobId: string) {
     // AI scoring stub

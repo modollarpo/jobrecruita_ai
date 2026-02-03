@@ -1,6 +1,8 @@
-import { View, Text, Animated, TouchableOpacity } from 'react-native';
+import { View, Text, Animated, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
+import { Screen } from '../components/Screen';
+import { Button } from '../components/Button';
 
 // Onboarding steps with modern design and animation
 const steps = [
@@ -40,32 +42,60 @@ export default function OnboardingScreen() {
   };
 
   return (
-    <View className="flex-1 items-center justify-center bg-white dark:bg-black px-6">
-      <Animated.View style={{ opacity: fadeAnim }} className="w-full items-center">
-        <Text className="text-3xl font-bold mb-4 text-center text-blue-700 dark:text-blue-300">
-          {steps[step].title}
-        </Text>
-        <Text className="text-lg text-center text-gray-600 dark:text-gray-300 mb-8">
-          {steps[step].description}
-        </Text>
+    <Screen>
+      <Animated.View style={[styles.content, { opacity: fadeAnim }]}>
+        <Text style={styles.title}>{steps[step].title}</Text>
+        <Text style={styles.description}>{steps[step].description}</Text>
       </Animated.View>
-      <View className="flex-row mt-6 mb-8 space-x-2">
+      <View style={styles.dotsRow}>
         {steps.map((_, i) => (
-          <View key={i} className={`w-3 h-3 rounded-full ${i === step ? 'bg-blue-600' : 'bg-gray-300 dark:bg-gray-700'}`} />
+          <View key={i} style={[styles.dot, i === step ? styles.dotActive : styles.dotInactive]} />
         ))}
       </View>
-      <TouchableOpacity
-        className="bg-blue-600 rounded-full px-8 py-3 mb-4"
+      <Button
+        title={step < steps.length - 1 ? 'Next' : 'Get started'}
+        fullWidth
         onPress={() => {
           if (step < steps.length - 1) nextStep();
           else router.replace('/auth/login');
         }}
-        activeOpacity={0.8}
-      >
-        <Text className="text-white text-lg font-semibold">
-          {step < steps.length - 1 ? 'Next' : 'Get Started'}
-        </Text>
-      </TouchableOpacity>
-    </View>
+      />
+    </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  content: {
+    alignItems: 'center',
+    marginBottom: 40,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#e5e7eb',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  description: {
+    fontSize: 16,
+    color: '#9ca3af',
+    textAlign: 'center',
+  },
+  dotsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 32,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
+  },
+  dotActive: {
+    backgroundColor: '#0ea5e9',
+  },
+  dotInactive: {
+    backgroundColor: '#1f2937',
+  },
+});

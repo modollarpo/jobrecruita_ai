@@ -1,18 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
+import axios from 'axios';
 
-const prisma = new PrismaClient();
+const backendBase = process.env.BACKEND_URL || 'http://localhost:3001';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     try {
-      const { jobId, candidateId } = req.body;
-      const application = await prisma.application.create({
-        data: { jobId, candidateId, status: 'applied' },
+      const backendRes = await axios.post(`${backendBase}/apply`, req.body, {
+        headers: { 'Content-Type': 'application/json' },
       });
-      res.status(201).json(application);
-    } catch (error) {
-      res.status(500).json({ error: 'Failed to apply to job' });
+      res.status(201).json(backendRes.data);
+    } catch (error: any) {
+      res.status(error.response?.status || 500).json({ error: error.response?.data?.message || 'Failed to apply to job' });
     }
   } else {
     res.setHeader('Allow', ['POST']);
