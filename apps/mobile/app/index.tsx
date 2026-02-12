@@ -21,12 +21,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '800',
-    color: '#e5e7eb',
+    color: '#1e293b',
     marginBottom: 12,
   },
   subtitle: {
     fontSize: 16,
-    color: '#9ca3af',
+    color: '#475569',
     marginBottom: 32,
   },
 });

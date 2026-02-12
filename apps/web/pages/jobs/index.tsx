@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Head from 'next/head';
 import { AppShell } from '../../components/AppShell';
 import { PageHeader } from '../../components/PageHeader';
 import { Table } from '../../components/Table';
@@ -62,64 +63,77 @@ export default function JobsPage() {
   }
 
   return (
-    <AppShell title="Jobs – JobRecruita" description="Browse and apply to jobs with AI-powered matching.">
-      <PageHeader
-        title="Jobs"
-        subtitle="Explore roles and apply with AI-assisted matching signals."
-        right={
-          <a
-            href="#"
-            className="inline-flex items-center justify-center rounded-lg bg-brand-primary px-4 py-2 text-sm font-semibold text-white shadow-premium hover:opacity-90 transition"
-          >
-            Post a Job
-          </a>
-        }
-      />
+    <>
+      <Head>
+        <title>Jobs & AI Matching – JobRecruita</title>
+        <meta name="description" content="Browse, match, and apply to jobs with enterprise-grade AI. Experience high-signal matching, instant compliance, and seamless application flows." />
+        <meta name="keywords" content="jobs, AI matching, apply, enterprise jobs, compliance, HR tech, JobRecruita" />
+      </Head>
+      <AppShell title="Jobs – JobRecruita" description="Browse and apply to jobs with AI-powered matching.">
+        <PageHeader
+          title="Jobs & AI Matching"
+          subtitle="Explore roles, see your match score, and apply with confidence. Our AI ensures every application is high-signal and compliance-ready."
+          right={
+            <a
+              href="#"
+              className="inline-flex items-center justify-center rounded-lg bg-brand-primary px-4 py-2 text-sm font-semibold text-white shadow-premium hover:opacity-90 transition"
+            >
+              Post a Job
+            </a>
+          }
+        />
 
-      <section className="rounded-xl border border-gray-border bg-white shadow-premium">
-        <div className="border-b border-gray-border px-6 py-4">
-          <div className="text-sm font-semibold text-gray-heading">Open roles</div>
-          <div className="mt-1 text-sm text-gray-body">{loading ? 'Loading jobs…' : `${jobs.length} jobs`}</div>
-        </div>
+        <section className="rounded-xl border border-gray-border bg-white shadow-premium">
+          <div className="border-b border-gray-border px-6 py-4">
+            <div className="text-sm font-semibold text-gray-heading">Open roles</div>
+            <div className="mt-1 text-sm text-gray-body">{loading ? 'Loading jobs…' : `${jobs.length} jobs`}</div>
+          </div>
 
-        <div className="px-6 py-6">
-          {loading ? (
-            <div className="h-32 flex items-center justify-center text-gray-body">Loading…</div>
-          ) : error ? (
-            <div className="h-32 flex items-center justify-center text-red-600">{error}</div>
-          ) : (
-            <>
-              <Table
-                columns={["title", "company", "matchScore", "actions"]}
-                data={jobs.map((job) => ({
-                  title: job.title,
-                  company: job.company,
-                  matchScore:
-                    matchScores[job.id] !== undefined && matchScores[job.id] !== null
-                      ? `${matchScores[job.id]!.toFixed(1)}%`
-                      : '—',
-                  actions: (
-                    <button
-                      type="button"
-                      onClick={() => handleApply(job.id)}
-                      disabled={applying === job.id}
-                      className={
-                        'inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-semibold shadow-premium transition ' +
-                        (applying === job.id
-                          ? 'bg-gray-100 text-gray-body cursor-not-allowed'
-                          : 'bg-brand-primary text-white hover:opacity-90')
-                      }
-                    >
-                      {applying === job.id ? 'Applying…' : 'Apply'}
-                    </button>
-                  ),
-                }))}
-              />
-              {applyMsg ? <div className="mt-4 text-center text-sm font-medium text-brand-secondary">{applyMsg}</div> : null}
-            </>
-          )}
-        </div>
-      </section>
-    </AppShell>
+          <div className="px-6 py-6">
+            {loading ? (
+              <div className="h-32 flex items-center justify-center text-gray-body">Loading…</div>
+            ) : error ? (
+              <div className="h-32 flex items-center justify-center text-red-600">{error}</div>
+            ) : (
+              <>
+                <Table
+                  columns={["title", "company", "matchScore", "actions"]}
+                  data={jobs.map((job) => ({
+                    title: job.title,
+                    company: job.company,
+                    matchScore:
+                      matchScores[job.id] !== undefined && matchScores[job.id] !== null
+                        ? `${matchScores[job.id]!.toFixed(1)}%`
+                        : '—',
+                    actions: (
+                      <button
+                        type="button"
+                        onClick={() => handleApply(job.id)}
+                        disabled={applying === job.id}
+                        className={
+                          'inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-semibold shadow-premium transition focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 ' +
+                          (applying === job.id
+                            ? 'bg-gray-100 text-gray-body cursor-not-allowed opacity-60'
+                            : 'bg-brand-primary text-white hover:brightness-110 hover:shadow-lg')
+                        }
+                        style={applying === job.id ? {} : {
+                          background: 'linear-gradient(90deg, #1FB6FF 0%, #0099A8 100%)',
+                          color: '#fff',
+                          border: '1.5px solid #0099A8',
+                          textShadow: '0 1px 8px rgba(31,182,255,0.25)',
+                        }}
+                      >
+                        {applying === job.id ? 'Applying…' : 'Apply'}
+                      </button>
+                    ),
+                  }))}
+                />
+                {applyMsg ? <div className="mt-4 text-center text-sm font-medium text-brand-secondary">{applyMsg}</div> : null}
+              </>
+            )}
+          </div>
+        </section>
+      </AppShell>
+    </>
   );
 }

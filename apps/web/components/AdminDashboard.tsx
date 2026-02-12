@@ -8,6 +8,7 @@ const Chart = dynamic(() => import('./Chart').then(mod => ({ default: mod.Chart 
 export function AdminDashboard() {
   return (
     <div className="space-y-8">
+      <h1 className="text-2xl font-bold text-gray-900" role="heading" aria-level={1}>Admin Dashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card title="Users">128</Card>
         <Card title="Jobs">42</Card>

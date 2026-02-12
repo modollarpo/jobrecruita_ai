@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, ActivityIndicator, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Screen } from '../components/Screen';
+import { ComplianceStatusBar } from '../components/ComplianceStatusBar';
 
 // Example candidate data
 const candidates = [
@@ -41,19 +42,19 @@ export default function CandidatesScreen() {
 
   if (loading) {
     return (
-      <Screen>
+      <Screen keyboardAvoiding>
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#0ea5e9" />
-          <Text style={styles.loadingText}>Loading candidates...</Text>
+          <ActivityIndicator size="large" color="#0ea5e9" accessibilityLabel="Loading candidates" />
+          <Text style={styles.loadingText} accessibilityRole="text">Loading candidates...</Text>
         </View>
       </Screen>
     );
   }
 
   return (
-    <Screen>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.heading}>Candidates</Text>
+    <Screen keyboardAvoiding>
+      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+        <Text style={styles.heading} accessibilityRole="header" accessibilityLabel="Candidates">Candidates</Text>
         {/* Search and filter bar */}
         <View style={styles.searchRow}>
           <TextInput
@@ -62,30 +63,37 @@ export default function CandidatesScreen() {
             value={search}
             onChangeText={setSearch}
             placeholderTextColor="#6b7280"
+            accessibilityLabel="Search candidates by name"
+            returnKeyType="search"
+            testID="search-input"
           />
           <TouchableOpacity
             style={styles.filterButton}
             onPress={() => setFilter(filter ? '' : 'React')}
+            accessibilityRole="button"
+            accessibilityLabel={filter ? 'Clear filter' : 'Filter by React skill'}
+            testID="filter-button"
           >
             <Text style={styles.filterLabel}>{filter ? 'Clear' : 'React'}</Text>
           </TouchableOpacity>
         </View>
         {/* Candidate cards */}
         {filtered.length === 0 ? (
-          <Text style={styles.emptyText}>No candidates found.</Text>
+          <Text style={styles.emptyText} accessibilityRole="text">No candidates found.</Text>
         ) : (
           filtered.map((c, idx) => (
-            <View key={idx} style={styles.card}>
+            <View key={idx} style={styles.card} accessible accessibilityLabel={`Candidate card for ${c.name}`}>
               <View style={styles.cardHeader}>
-                <Text style={styles.name}>{c.name}</Text>
-                <Text style={styles.score}>AI score: {c.aiScore}</Text>
+                <Text style={styles.name} accessibilityRole="text">{c.name}</Text>
+                <Text style={styles.score} accessibilityRole="text">AI score: {c.aiScore}</Text>
               </View>
-              <Text style={styles.skills}>Skills: {c.skills.join(', ')}</Text>
+              <Text style={styles.skills} accessibilityRole="text">Skills: {c.skills.join(', ')}</Text>
               <SkillHeatmap heatmap={c.heatmap} />
             </View>
           ))
         )}
       </ScrollView>
+      <ComplianceStatusBar status="Active" daysLeft={45} />
     </Screen>
   );
 }

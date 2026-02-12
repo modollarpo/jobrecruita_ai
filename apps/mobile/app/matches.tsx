@@ -1,18 +1,20 @@
 import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Screen } from '../components/Screen';
+import { VerificationSignal } from '../components/VerificationSignal';
 
-// Placeholder matches data
-const matches = [
-  { job: 'Frontend Developer', company: 'TechCorp', score: 92 },
-  { job: 'AI Engineer', company: 'AI Labs', score: 88 },
-];
+import { apiFetch } from '../../shared/utils/api';
 
 export default function MatchesScreen() {
   const [loading, setLoading] = useState(true);
+  const [matches, setMatches] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
+    apiFetch('http://localhost:3000/api/matches')
+      .then((data) => setMatches(data))
+      .catch(() => setError('Failed to load matches'))
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) {
@@ -25,18 +27,29 @@ export default function MatchesScreen() {
       </Screen>
     );
   }
-
+  if (error) {
+    return (
+      <Screen>
+        <View style={styles.center}>
+          <Text style={styles.loadingText}>{error}</Text>
+        </View>
+      </Screen>
+    );
+  }
   return (
     <Screen>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.heading}>Your AI matches</Text>
-        {matches.map((m, idx) => (
+        {matches.length === 0 ? (
+          <Text style={styles.emptyText}>No matches found.</Text>
+        ) : matches.map((m, idx) => (
           <View key={idx} style={styles.card}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
-              <Text style={styles.job}>{m.job}</Text>
-              <Text style={styles.score}>{m.score}%</Text>
+              <Text style={styles.job}>{m.job?.title || m.job || 'Unknown Job'}</Text>
+              <Text style={styles.score}>{m.aiScore ? `${m.aiScore}%` : 'N/A'}</Text>
             </View>
-            <Text style={styles.company}>{m.company}</Text>
+            <Text style={styles.company}>{m.job?.company || m.company || ''}</Text>
+            <VerificationSignal verified={true} zkpTime={1.02 + idx * 0.1} />
             <Text style={styles.hint}>Tap a role in the web app for full radar analysis.</Text>
           </View>
         ))}

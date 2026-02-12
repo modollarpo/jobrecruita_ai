@@ -14,7 +14,7 @@ interface ButtonProps {
 export function Button({ title, onPress, variant = 'primary', fullWidth = false, disabled = false }: ButtonProps) {
   const baseStyles: ViewStyle[] = [styles.base];
 
-  if (variant === 'primary') baseStyles.push(styles.primary);
+  if (variant === 'primary') baseStyles.push(styles.accessiblePrimary);
   if (variant === 'secondary') baseStyles.push(styles.secondary);
   if (variant === 'ghost') baseStyles.push(styles.ghost);
   if (fullWidth) baseStyles.push(styles.fullWidth);
@@ -22,7 +22,7 @@ export function Button({ title, onPress, variant = 'primary', fullWidth = false,
 
   return (
     <TouchableOpacity style={baseStyles} onPress={onPress} activeOpacity={0.85} disabled={disabled}>
-      <Text style={[styles.label, variant === 'ghost' ? styles.labelGhost : null]}>{title}</Text>
+      <Text style={[styles.accessibleLabel, variant === 'ghost' ? styles.labelGhost : null]}>{title}</Text>
     </TouchableOpacity>
   );
 }
@@ -37,6 +37,9 @@ const styles = StyleSheet.create({
   },
   primary: {
     backgroundColor: '#0ea5e9',
+  },
+  accessiblePrimary: {
+    backgroundColor: '#0284c7', // WCAG-compliant blue
   },
   secondary: {
     backgroundColor: '#1f2937',
@@ -54,6 +57,11 @@ const styles = StyleSheet.create({
   },
   label: {
     color: '#f9fafb',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+  accessibleLabel: {
+    color: '#fff', // WCAG-compliant white
     fontWeight: '600',
     fontSize: 16,
   },

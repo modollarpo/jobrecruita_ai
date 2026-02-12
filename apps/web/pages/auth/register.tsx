@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -89,8 +89,14 @@ export default function RegisterPage() {
               {error ? <div className="text-sm text-red-600">{error}</div> : null}
 
               <button
-                className="w-full rounded-lg bg-brand-primary px-4 py-2.5 text-sm font-semibold text-white shadow-premium transition hover:opacity-90"
+                className="w-full rounded-lg bg-brand-primary px-4 py-2.5 text-sm font-semibold text-white shadow-premium transition hover:brightness-110 hover:shadow-lg focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 type="submit"
+                style={{
+                  background: 'linear-gradient(90deg, #1FB6FF 0%, #0099A8 100%)',
+                  color: '#fff',
+                  border: '1.5px solid #0099A8',
+                  textShadow: '0 1px 8px rgba(31,182,255,0.25)',
+                }}
               >
                 Create account
               </button>

@@ -2,19 +2,19 @@ import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity, StyleSheet
 import { useEffect, useState } from 'react';
 import { Screen } from '../components/Screen';
 
-// Example notifications data
-const notifications = [
-  { message: 'Your application for Frontend Developer was viewed.', time: '2h ago' },
-  { message: 'New job match: AI Engineer at AI Labs.', time: '1d ago' },
-];
+import { apiFetch } from '../../shared/utils/api';
 
 // Notifications page with modern design and push notification placeholder
 export default function NotificationsScreen() {
   const [loading, setLoading] = useState(true);
-  const [notifs, setNotifs] = useState(notifications);
+  const [notifs, setNotifs] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
+    apiFetch('http://localhost:3000/api/activity')
+      .then((data) => setNotifs(data))
+      .catch(() => setError('Failed to load notifications'))
+      .finally(() => setLoading(false));
   }, []);
 
   const clearNotifications = () => setNotifs([]);
@@ -29,7 +29,15 @@ export default function NotificationsScreen() {
       </Screen>
     );
   }
-
+  if (error) {
+    return (
+      <Screen>
+        <View style={styles.center}>
+          <Text style={styles.loadingText}>{error}</Text>
+        </View>
+      </Screen>
+    );
+  }
   return (
     <Screen>
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -44,8 +52,8 @@ export default function NotificationsScreen() {
         ) : (
           notifs.map((n, idx) => (
             <View key={idx} style={styles.card}>
-              <Text style={styles.message}>{n.message}</Text>
-              <Text style={styles.time}>{n.time}</Text>
+              <Text style={styles.message}>{n.message || n.action}</Text>
+              <Text style={styles.time}>{n.time || n.createdAt}</Text>
             </View>
           ))
         )}

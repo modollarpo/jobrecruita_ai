@@ -2,29 +2,37 @@ import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from 'react-nat
 import { useEffect, useState } from 'react';
 import { JobSwipeCard } from '../components/JobSwipeCard';
 import { Screen } from '../components/Screen';
+import { apiFetch } from '../../shared/utils/api';
 
-// Example data for dashboard
-const jobs = [
-  { title: 'Frontend Developer', company: 'TechCorp', description: 'React, TypeScript, TailwindCSS', logoUrl: '' },
-  { title: 'AI Engineer', company: 'AI Labs', description: 'Python, ML, Deep Learning', logoUrl: '' },
-  { title: 'Product Designer', company: 'DesignPro', description: 'Figma, UX, UI', logoUrl: '' },
-];
-const activity = [
-  { type: 'applied', message: 'You applied to Frontend Developer at TechCorp', time: '2h ago' },
-  { type: 'match', message: 'AI matched you to AI Engineer at AI Labs', time: '1d ago' },
-];
-const aiInsights = {
-  matches: 3,
-  autoApplied: 1,
-  interviews: 0,
-};
+// Real data state
+const initialInsights = { matches: 0, autoApplied: 0, interviews: 0 };
 
 // Dashboard page with AI insights, activity feed, jobs/candidates overview
 export default function DashboardScreen() {
   const [loading, setLoading] = useState(true);
+  const [jobs, setJobs] = useState([]);
+  const [activity, setActivity] = useState([]);
+  const [aiInsights, setAiInsights] = useState(initialInsights);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
+    async function fetchData() {
+      try {
+        const [jobsData, activityData, insightsData] = await Promise.all([
+          apiFetch('http://localhost:3000/api/jobs'),
+          apiFetch('http://localhost:3000/api/activity'),
+          apiFetch('http://localhost:3000/api/analytics'),
+        ]);
+        setJobs(jobsData);
+        setActivity(activityData);
+        setAiInsights(insightsData);
+      } catch (err) {
+        setError('Failed to load dashboard data');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
   }, []);
 
   if (loading) {
@@ -37,34 +45,43 @@ export default function DashboardScreen() {
       </Screen>
     );
   }
-
+  if (error) {
+    return (
+      <Screen>
+        <View style={styles.loadingCenter}>
+          <Text style={styles.loadingText}>{error}</Text>
+        </View>
+      </Screen>
+    );
+  }
   return (
     <Screen>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.heading}>Today at a glance</Text>
-
         <View style={styles.kpiRow}>
-          <View style={[styles.kpiCard, { backgroundColor: '#0f172a' }]}> 
+          <View style={[styles.kpiCard, { backgroundColor: '#0f172a' }]}>
             <Text style={styles.kpiLabel}>AI matches</Text>
             <Text style={styles.kpiValue}>{aiInsights.matches}</Text>
           </View>
-          <View style={[styles.kpiCard, { backgroundColor: '#022c22' }]}> 
+          <View style={[styles.kpiCard, { backgroundColor: '#022c22' }]}>
             <Text style={styles.kpiLabel}>Auto-applied</Text>
             <Text style={styles.kpiValue}>{aiInsights.autoApplied}</Text>
           </View>
-          <View style={[styles.kpiCard, { backgroundColor: '#1f2937' }]}> 
+          <View style={[styles.kpiCard, { backgroundColor: '#1f2937' }]}>
             <Text style={styles.kpiLabel}>Interviews</Text>
             <Text style={styles.kpiValue}>{aiInsights.interviews}</Text>
           </View>
         </View>
-
         <Text style={styles.sectionTitle}>Recommended roles</Text>
-        {jobs.map((job, idx) => (
+        {jobs.length === 0 ? (
+          <Text style={styles.emptyText}>No jobs found.</Text>
+        ) : jobs.map((job, idx) => (
           <JobSwipeCard key={idx} job={job} />
         ))}
-
         <Text style={styles.sectionTitle}>Recent activity</Text>
-        {activity.map((a, idx) => (
+        {activity.length === 0 ? (
+          <Text style={styles.emptyText}>No activity yet.</Text>
+        ) : activity.map((a, idx) => (
           <View key={idx} style={styles.activityCard}>
             <Text style={styles.activityText}>{a.message}</Text>
             <Text style={styles.activityMeta}>{a.time}</Text>

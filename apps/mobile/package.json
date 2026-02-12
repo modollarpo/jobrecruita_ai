@@ -16,5 +16,9 @@
     "expo": "^54.0.33",
     "expo-router": "~6.0.22",
     "react-native-web": "^0.21.0"
+  },
+  "devDependencies": {
+    "@types/react": "~19.1.10",
+    "typescript": "~5.9.2"
   }
 }

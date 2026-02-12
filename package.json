@@ -5,21 +5,25 @@
     "dev:web": "npm --prefix apps/web run dev",
     "dev:backend": "npm --prefix apps/backend run start:dev",
     "dev:mobile": "npm --prefix apps/mobile run dev",
-
     "build:web": "npm --prefix apps/web run build",
     "build:backend": "npm --prefix apps/backend run build",
     "build:mobile": "npm --prefix apps/mobile run build",
     "build": "npm run build:web && npm run build:backend",
-
     "lint:web": "npm --prefix apps/web run lint",
     "lint:backend": "npm --prefix apps/backend run lint",
     "lint": "npm run lint:web && npm run lint:backend",
-
     "typecheck:web": "npm --prefix apps/web run typecheck",
     "typecheck:backend": "npm --prefix apps/backend run typecheck",
     "typecheck": "npm run typecheck:web && npm run typecheck:backend"
   },
   "engines": {
     "node": ">=18.18.0"
+  },
+  "dependencies": {
+    "@types/react": "^19.2.13",
+    "@types/react-dom": "^19.2.3",
+    "next": "^16.1.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
   }
 }

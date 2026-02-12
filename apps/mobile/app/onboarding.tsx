@@ -72,13 +72,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '800',
-    color: '#e5e7eb',
+    color: '#1e293b',
     textAlign: 'center',
     marginBottom: 16,
   },
   description: {
     fontSize: 16,
-    color: '#9ca3af',
+    color: '#475569',
     textAlign: 'center',
   },
   dotsRow: {

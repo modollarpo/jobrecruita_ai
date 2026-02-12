@@ -1,94 +1,100 @@
-# JobRecruita – AI-Powered Recruitment Platform
 
-## Monorepo Structure
+# JobRecruita – Enterprise AI Recruitment Platform
 
-- `apps/web` – Next.js frontend (Azure Web App)
-- `apps/backend` – NestJS API backend (Azure Web App)
-- `apps/mobile` – Expo React Native app (Azure App Center/EAS)
-- `apps/shared` – Shared UI, types, and utilities
+![CI](https://github.com/modollarpo/jobrecruita_ai/actions/workflows/ci.yml/badge.svg)
+![Backend Deploy](https://github.com/modollarpo/jobrecruita_ai/actions/workflows/azure-backend.yml/badge.svg)
+![Web Deploy](https://github.com/modollarpo/jobrecruita_ai/actions/workflows/azure-webapp.yml/badge.svg)
+![CodeQL](https://github.com/modollarpo/jobrecruita_ai/actions/workflows/codeql.yml/badge.svg)
+
+---
+
+## Overview
+
+JobRecruita is an enterprise-grade, AI-powered recruitment platform designed for modern hiring teams. It features:
+
+- Modular monorepo (web, backend, mobile, shared)
+- AI-driven candidate/job matching, auto-apply, and analytics
+- Compliance, audit logging, and advanced security
+- Real-time monitoring, error tracking, and CI/CD automation
+- Scalable, cloud-native architecture (Azure-ready)
+
+## Architecture
+
+```mermaid
+graph TD
+  A[Web (Next.js)] --API--> B[Backend (NestJS)]
+  B --DB--> C[(PostgreSQL)]
+  B --AI--> D[AI Engine]
+  A --API--> B
+  E[Mobile (Expo/React Native)] --API--> B
+  B --Queue--> F[Async Workers]
+  A --Monitoring--> G[Sentry/LogRocket/Datadog]
+  B --Monitoring--> G
+```
+
+## Features
+
+- **Web**: Next.js, TailwindCSS, admin dashboard, analytics, compliance widgets, SSO, dark/light mode
+- **Backend**: NestJS, Prisma, PostgreSQL, JWT/OAuth, modular services, audit logging, rate limiting, validation
+- **Mobile**: Expo, React Native, onboarding, swipe-to-match, push notifications, offline support
+- **AI Engine**: Modular TypeScript, explainable AI matching, auto-apply, analytics
+- **DevOps**: GitHub Actions CI/CD, Azure deployment, .env management, Sentry/LogRocket/Datadog
 
 ## Quick Start
 
-1. Clone the repo:
-	```sh
-	git clone https://github.com/modollarpo/jobrecruita_ai.git
-	cd jobrecruita_ai
-	```
-2. Install dependencies (from the repo root):
-	```sh
-	npm install
-	```
-3. Copy `.env.example` files in each app to `.env` and fill in values.
-4. Start apps locally (from the repo root, separate terminals recommended):
-	- Web: `npm run dev:web`
-	- Backend: `npm run dev:backend`
-	- Mobile: `npm run dev:mobile`
-
-## Top-level Commands
-
-From the repository root you can control all apps:
-
-- Development
-	- `npm run dev:web` – Next.js web frontend
-	- `npm run dev:backend` – NestJS API backend
-	- `npm run dev:mobile` – Expo mobile app
-
-- Build
-	- `npm run build:web` – Production build for web
-	- `npm run build:backend` – Production build for backend
-	- `npm run build` – Build web and backend together
-
-- Quality
-	- `npm run lint` – Lint web + backend
-	- `npm run typecheck` – Type-check web + backend
+1. **Clone the repo:**
+   ```sh
+   git clone https://github.com/modollarpo/jobrecruita_ai.git
+   cd jobrecruita_ai
+   ```
+2. **Install dependencies:**
+   ```sh
+   npm install
+   ```
+3. **Setup environment:**
+   - Copy `.env.example` in each app to `.env` and fill in values
+4. **Run apps locally:**
+   - Web: `npm run dev:web`
+   - Backend: `npm run dev:backend`
+   - Mobile: `npm run dev:mobile`
 
 ## Local Full-stack Flow
 
-To exercise the full platform locally:
+1. Start backend API: `npm run dev:backend`
+2. Start web frontend: `npm run dev:web`
+3. Start mobile app: `npm run dev:mobile` (or `npx expo start` in `apps/mobile`)
+4. Ensure PostgreSQL is running and Prisma migrations are applied
 
-1. In one terminal, start the backend API (NestJS + Prisma):
-	```sh
-	npm run dev:backend
-	```
-2. In another terminal, start the web frontend (Next.js):
-	```sh
-	npm run dev:web
-	```
-3. The web app will call its `/api/*` routes, which in turn talk to the backend on `http://localhost:3001` for auth and AI match endpoints as configured in the Next.js API handlers.
+## CI/CD & Deployment
 
-Before running in earnest, ensure your Postgres instance is up and Prisma migrations have been applied from `apps/backend`.
+- **Web & Backend:**
+  - Azure Web App deploy via GitHub Actions
+  - Add Azure Publish Profile secrets to GitHub
+  - Push to `master` to trigger build/deploy
+- **Mobile:**
+  - Use Expo EAS or Azure App Center for CI/CD and distribution
 
-## Azure Deployment
+## Monitoring & Analytics
 
-### Web & Backend
-- Both apps are ready for Azure Web App deployment via GitHub Actions.
-- Add your Azure Publish Profile secrets to GitHub as described in each app's README.
-- Push to `master` to trigger CI/CD and deploy.
-
-### Mobile
-- Use Expo EAS or Azure App Center for mobile CI/CD and distribution.
+- **Web:** Sentry, LogRocket, Datadog RUM (see `apps/web/README.md`)
+- **Backend:** Winston logging, correlation IDs, audit logs
+- **Mobile:** Ready for Sentry/Datadog via Expo plugins
 
 ## Environment Variables
 
-- See `.env.example` in each app for required variables.
-- Never commit real secrets to the repo.
+- See `.env.example` in each app for required variables
+- Never commit real secrets to the repo
 
-## CI/CD
+## Contributing
 
-- GitHub Actions workflows for web and backend are in `.github/workflows/`.
-- Add badges and monitor deployments from the Actions tab.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## Documentation
+
+- [Web README](apps/web/README.md)
+- [Backend README](apps/backend/README.md)
+- [Mobile README](apps/mobile/README.md)
+- [Shared/Types/Utils](apps/shared/)
 
 ---
-For more, see each app's README.md.
-# JobRecruita
-
-Enterprise-grade AI-powered recruitment platform. Modular, scalable, and production-ready.
-
-## Apps
-- **Mobile:** Expo + TypeScript + Expo Router
-- **Web:** Next.js + TypeScript + TailwindCSS
-- **Backend:** Node.js + TypeScript + NestJS + PostgreSQL
-- **AI Engine:** Modular TypeScript services
-
-## Getting Started
-- See `/apps/backend/README.md`, `/apps/web/README.md`, `/apps/mobile/README.md` for setup instructions.
+For more, see each app's README.md and the `.github/copilot-instructions.md` for development best practices.
